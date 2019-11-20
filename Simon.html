@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+
+        <script type="text/javascript">
+            var gameSequence = new Array();
+            var playerSequence = new Array();
+            var gameIndex = 0;
+            var playerIndex = 0;
+            var whichColor = -1;
+            var milsec = 500;
+            var gameOver = false;
+            var passCount = 0;
+            var passCompleted = false;
+
+            function spinIt() {
+                gameOver = false;
+                gameIndex = 0;
+                playerIndex = 0;
+                whichColor = -1;
+                milsec = 500;
+                passCount = 0;
+
+                var mils = 80;    
+                document.getElementById("numbers").innerHTML="";
+                for(i=1;i<=3;i++) {
+                setTimeout("document.getElementById('yellowOne').style.backgroundColor='yellow';",mils);
+                mils+=80;
+                setTimeout("document.getElementById('yellowOne').style.backgroundColor='burlywood';",mils);
+                mils+=80;
+                setTimeout("document.getElementById('greenOne').style.backgroundColor='green';",mils);
+                mils+=80;
+                setTimeout("document.getElementById('greenOne').style.backgroundColor='burlywood';",mils);
+                mils+=80;
+                setTimeout("document.getElementById('blueOne').style.backgroundColor='blue';",mils);
+                mils+=80;
+                setTimeout("document.getElementById('blueOne').style.backgroundColor='burlywood';",mils);
+                mils+=80;
+                setTimeout("document.getElementById('redOne').style.backgroundColor='red';",mils);
+                mils+=80;
+                setTimeout("document.getElementById('redOne').style.backgroundColor='burlywood';",mils);
+                mils+=80;
+                }
+                document.getElementById("yellowOne").style.backgroundColor="yellow";
+                document.getElementById("greenOne").style.backgroundColor="green";
+                document.getElementById("blueOne").style.backgroundColor="blue";
+                document.getElementById("redOne").style.backgroundColor="red";
+                setTimeout("document.getElementById('yellowOne').style.backgroundColor='burlywood';",mils);
+                setTimeout("document.getElementById('greenOne').style.backgroundColor='burlywood';",mils);
+                setTimeout("document.getElementById('blueOne').style.backgroundColor='burlywood';",mils);
+                setTimeout("document.getElementById('redOne').style.backgroundColor='burlywood';",mils);
+                mils+=200;
+                setTimeout("document.getElementById('yellowOne').style.backgroundColor='yellow';",mils);
+                setTimeout("document.getElementById('greenOne').style.backgroundColor='green';",mils);
+                setTimeout("document.getElementById('blueOne').style.backgroundColor='blue';",mils);
+                setTimeout("document.getElementById('redOne').style.backgroundColor='red';",mils);
+                mils+=200;
+                setTimeout("document.getElementById('yellowOne').style.backgroundColor='burlywood';",mils);
+                setTimeout("document.getElementById('greenOne').style.backgroundColor='burlywood';",mils);
+                setTimeout("document.getElementById('blueOne').style.backgroundColor='burlywood';",mils);
+                setTimeout("document.getElementById('redOne').style.backgroundColor='burlywood';",mils);
+
+                for(k=0;k<=200;k++)  {                          //Create a 200 length color sequence.
+                    whichColor = Math.floor(Math.random()*4);   //Anyone who can get through this has 
+                    gameSequence[k] = whichColor;               //better things to do than playing this game. 
+                    document.getElementById("numbers").innerHTML += gameSequence[k] + " ";
+                }
+
+                document.getElementById("long").innerHTML="Current sequence length: "+"<span>"+1+"</span>";
+                document.getElementById("done").innerHTML="Completed sequence length: "+"<span>"+0+"</span>";
+            }
+
+            function lightIt(theColor) {
+                if(gameOver)     //Once a mistake is made, disable the buttons.
+                    return;
+
+                playerSequence[playerIndex] = theColor;                     //Place the player's color in his or her sequence.
+
+                if(!passCompleted && theColor==0 && gameSequence[playerIndex] == theColor) {  //Check for a match in sequence.
+                    document.getElementById("yellowOne").style.backgroundColor="yellow";
+                    setTimeout("document.getElementById('yellowOne').style.backgroundColor='burlywood';",milsec);
+                    playerIndex++;
+
+                    if(playerIndex == passCount) {
+                        passCount = 0;
+                        passCompleted = true;
+                        setTimeout("colorPattern();",500);
+                    }
+                    return;
+                                       
+                }     
+                if(!passCompleted && theColor==1 && gameSequence[playerIndex] == theColor) {
+                    document.getElementById("greenOne").style.backgroundColor="green";
+                    setTimeout("document.getElementById('greenOne').style.backgroundColor='burlywood';",milsec);
+                    playerIndex++;
+
+                    if(playerIndex == passCount) {
+                        passCount = 0;
+                        passCompleted = true;
+                        setTimeout("colorPattern();",500);
+                    }
+                    return;
+                       
+                }
+                if(!passCompleted && theColor==2 && gameSequence[playerIndex] == theColor) {
+                    document.getElementById("blueOne").style.backgroundColor="blue";
+                    setTimeout("document.getElementById('blueOne').style.backgroundColor='burlywood';",milsec);
+                    playerIndex++;
+
+                    if(playerIndex == passCount) {
+                        passCount = 0;
+                        passCompleted = true;
+                        setTimeout("colorPattern();",500);
+                    }
+                    return;
+                    
+                }
+                if(!passCompleted && theColor==3 && gameSequence[playerIndex] == theColor) {
+                    document.getElementById("redOne").style.backgroundColor="red";
+                    setTimeout("document.getElementById('redOne').style.backgroundColor='burlywood';",milsec);
+                    playerIndex++;
+
+                    if(playerIndex == passCount) {
+                        passCount = 0;
+                        passCompleted = true;
+                        setTimeout("colorPattern();",500);
+                    }
+                    return;
+                        
+                }
+                if(!passCompleted && gameSequence[playerIndex] != theColor) {         //When the player makes a mistake, 
+                    gameOver=true;                                  //the game is over and lightIt() no longer works!
+
+                        if(theColor == 0) {
+                        document.getElementById("yellowOne").style.backgroundColor="black";
+                        setTimeout("document.getElementById('yellowOne').style.backgroundColor='burlywood';",250);
+                        setTimeout("document.getElementById('yellowOne').style.backgroundColor='black';",500);
+                        setTimeout("document.getElementById('yellowOne').style.backgroundColor='burlywood';",750);
+                        }
+                        if(theColor == 1) {
+                        document.getElementById("greenOne").style.backgroundColor="black";
+                        setTimeout("document.getElementById('greenOne').style.backgroundColor='burlywood';",250);
+                        setTimeout("document.getElementById('greenOne').style.backgroundColor='black';",500);
+                        setTimeout("document.getElementById('greenOne').style.backgroundColor='burlywood';",750);
+                        }
+                        if(theColor == 2) {
+                        document.getElementById("blueOne").style.backgroundColor="black";
+                        setTimeout("document.getElementById('blueOne').style.backgroundColor='burlywood';",250);
+                        setTimeout("document.getElementById('blueOne').style.backgroundColor='black';",500);
+                        setTimeout("document.getElementById('blueOne').style.backgroundColor='burlywood';",750);
+                        }
+                        if(theColor == 3) {
+                        document.getElementById("redOne").style.backgroundColor="black";
+                        setTimeout("document.getElementById('redOne').style.backgroundColor='burlywood';",250);
+                        setTimeout("document.getElementById('redOne').style.backgroundColor='black';",500);
+                        setTimeout("document.getElementById('redOne').style.backgroundColor='burlywood';",750);
+                        }
+                        var flash = 1000;
+                        
+                        for(i=1;i<passCount;i++) {
+                            setTimeout("document.getElementById('greenOne').style.backgroundColor='green';",flash);
+                            flash+=200;
+                            setTimeout("document.getElementById('greenOne').style.backgroundColor='burlywood';",flash);
+                            flash+=200;
+                        }
+                }
+            }
+
+            function colorPattern() {
+                passCompleted = true;   //Disable color buttons while sequence is running.
+                if(gameOver)        //disable this button after a mistake has been made, force a new game!
+                    return;
+
+                document.getElementById("long").innerHTML="Current sequence length: "+"<span>"+(playerIndex+1)+"</span>";
+                document.getElementById("done").innerHTML="Completed sequence length: "+"<span>"+(playerIndex)+"</span>";
+
+                var miliseconds = 500;
+                for(i=0;i<=playerIndex;i++) {
+                    if(gameSequence[i] == 0) {
+                        setTimeout("document.getElementById('yellowOne').style.backgroundColor='yellow';",miliseconds);
+                        miliseconds+=500;
+                        setTimeout("document.getElementById('yellowOne').style.backgroundColor='burlywood';",miliseconds);
+                        miliseconds+=500;
+                        passCount++;
+                    }
+                    if(gameSequence[i] == 1) {
+                        setTimeout("document.getElementById('greenOne').style.backgroundColor='green';",miliseconds);
+                        miliseconds+=500;
+                        setTimeout("document.getElementById('greenOne').style.backgroundColor='burlywood';",miliseconds);
+                        miliseconds+=500;
+                        passCount++;
+                    }
+                    if(gameSequence[i] == 2) {
+                        setTimeout("document.getElementById('blueOne').style.backgroundColor='blue';",miliseconds);
+                        miliseconds+=500;
+                        setTimeout("document.getElementById('blueOne').style.backgroundColor='burlywood';",miliseconds);
+                        miliseconds+=500;
+                        passCount++;
+                    }
+                    if(gameSequence[i] == 3) {
+                        setTimeout("document.getElementById('redOne').style.backgroundColor='red';",miliseconds);
+                        miliseconds+=500;
+                        setTimeout("document.getElementById('redOne').style.backgroundColor='burlywood';",miliseconds);
+                        miliseconds+=500;
+                        passCount++;
+                    }
+                }
+                playerIndex = 0;        
+                passCompleted = false;  //Allow the player to click colors once again.
+            }
+        </script>
+
+        <style type="text/css">
+            table {
+                width: 30%;
+                background-color: black;
+                border-collapse: collapse;
+                margin-top: 20px;
+                margin-left: 2%;
+                margin-right: 2%;
+                float: left;
+            }
+            td {
+                width: 50%;
+                height: 200px;
+                background-color: burlywood;
+                border: 2px solid black;
+            }
+            .lightUp {
+                position: relative;
+                left: 33%;
+                vertical-align: middle;
+                width: 33%;
+                height: 33%;
+                border-color: 2px solid black;
+            }
+            #numbers {
+                width: 200px;
+                border: 2px solid black;
+                font-size: 10px;
+                display: none;
+            }
+            #rules {
+                width: 400px;
+                border: 2px solid black;
+                font-size: 20px;
+                font-weight: bold;
+                float: left;
+                text-align: left;
+                padding-left: 5px;
+                padding-right: 15px;
+                padding-top: 5px;
+                padding-bottom: 5px;
+                background-color: gray;
+            }
+            .stats {
+                background-color: aqua;
+                color: black;
+                text-align: center;
+                font-size: 30px;
+                font-weight: bold;
+                height: 46px;
+            }
+            span {
+                color: maroon;
+                font-weight: bold;
+            }
+            
+        </style>
+    </head>
+    
+    <body>
+        <h1>Simon!</h1>
+        <p>&copy; 2019 by Kenneth White</p>
+        <button onclick="spinIt();">Start Game</button>
+        <button onclick="colorPattern(playerIndex);">Color Pattern</button>
+        <br>
+        <div id = "numbers"></div>
+        <table>
+            <tr>
+                <td colspan = "2" id = "long" class = "stats">Current sequence length: <span>1</span></td>
+            </tr>
+            <tr>
+                <td id="yellowOne"><button onclick="lightIt(0);" class="lightUp" style="background-color: yellow;"></button></td>
+                <td id="greenOne"><button onclick="lightIt(1);" class="lightUp" style="background-color: green;"></button></td>
+            </tr>
+            <tr>
+                <td id="redOne"><button onclick="lightIt(3);" class="lightUp" style="background-color: red;"></button></td>
+                <td id="blueOne"><button onclick="lightIt(2);" class="lightUp" style="background-color: blue;"></button></td>
+            </tr>
+            <tr>
+                <td colspan = "2" id = "done" class = "stats">Completed sequence length: <span>0</span></td>
+            </tr>
+            
+
+        </table>
+        <br>
+        <div id = "rules">
+            <ul>
+                <li>Click Start Game to begin. After the board does its little dance, click Color Pattern.</li><br>
+                <li>A colored square will light up. Click that color button to continue the game.</li><br>
+                <li>The pattern will automatically repeat and increase by 1 with each round.</li><br> 
+                <li>After the pattern runs through, click the colors to match the sequence.</li><br>
+                <li>The game is over when a mistake is made trying to follow the pattern. The mistake will flash black twice.</li><br> 
+                <li>The green square will flash as many times as the longest successful pass was completed.</li><br>
+                <li>Good luck and have fun!</li>
+            </ul>
+        </div>
+    </body>
+</html>

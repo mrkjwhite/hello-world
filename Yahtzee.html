@@ -1,0 +1,921 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+
+        <script type="text/javascript">
+        var firstDi = 0;            //Placeholders for the 5 dice values.
+        var secondDi = 0;
+        var thirdDi = 0;
+        var fourthDi = 0;
+        var fifthDi = 0;
+
+        var reroll1stDi = true;     //default values assuming rolling again
+        var reroll2ndDi = true;     //values change to false only when die is kept
+        var reroll3rdDi = true;
+        var reroll4thDi = true;
+        var reroll5thDi = true;
+
+        var ones = -1;              //Initialize Upper Half variables
+        var twos = -1;              //at -1 for Zero Out possibilities.
+        var threes = -1;
+        var fours = -1;
+        var fives = -1;
+        var sixes = -1;
+        var subtotal = 0;           //Initialize these at 0 for summation of above.
+        var bonus = 0;
+        var bonusTaken = false;     //This prevents multiple bonus awards in case of lucky upper half rolls.
+        var upperHalfTotal = 0;
+
+        var lowerHalfTotal = 0;     //Now for the Lower Half placeholders.
+        var yahtzee = -1;
+        var chance = -1;
+        var lgStraight = -1;
+        var smStraight = -1;
+        var fullHouse = -1;
+        var threeOfKind = -1;
+        var fourOfKind = -1;
+
+        var theDice = new Array(5);     //This comes in handy for verifying and posting scores.
+
+        var milsec = 300;           //This will regulate one die result appearing at a time.
+        var rollNumber = 0;         //Initialize roll count.
+        var turnsTaken = 0;         //Monitors and limits game length.
+
+        var gamesPlayed = 0;        //Placeholders for the New Game Function
+        var sumOfGTs = 0;
+        var gameScores = new Array();
+        var hiScore = 0;
+        var average;
+
+        //--------------------------------------The New Game Function-----------------------------------------------
+        function newGame() {
+            if(turnsTaken < 13) {
+                alert("Game is still in progress. Please continue.");
+                return;
+            }
+
+            sumOfGTs+= (lowerHalfTotal+subtotal+bonus);             //Add grand total of previous game to session total score.
+            gameScores[gamesPlayed]=lowerHalfTotal+subtotal+bonus;  //Put grand total of previous game into the current array slot.
+
+            for(i=0;i<=gamesPlayed;i++) {       //establish High Game for the session.
+                if(gameScores[i]>hiScore)       //gamesPlayed is NOT incremented to accomodate array index.
+                hiScore=gameScores[i];
+            }
+
+            gamesPlayed++;                                          //Increment games played AFTER hiScore is determined.
+            average = Math.floor((sumOfGTs/gamesPlayed)*100)/100;                                        
+
+            firstDi = 0;            //Placeholders for the 5 dice values.
+            secondDi = 0;           //Reinitialize game start values.
+            thirdDi = 0;
+            fourthDi = 0;
+            fifthDi = 0;
+
+            reroll1stDi = true;     //default values assuming rolling again
+            reroll2ndDi = true;     //values change to false only when die is kept
+            reroll3rdDi = true;
+            reroll4thDi = true;
+            reroll5thDi = true;
+
+            ones = -1;              //Initialize Upper Half variables
+            twos = -1;              //at -1 for Zero Out possibilities.
+            threes = -1;
+            fours = -1;
+            fives = -1;
+            sixes = -1;
+            subtotal = 0;           //Initialize these at 0 for summation of above.
+            bonus = 0;
+            bonusTaken = false;     //This prevents multiple bonus awards in case of lucky upper half rolls.
+            upperHalfTotal = 0;
+
+            lowerHalfTotal = 0;     //Now for the Lower Half placeholders.
+            yahtzee = -1;
+            yahtzeesScored = 0;
+            chance = -1;
+            lgStraight = -1;
+            smStraight = -1;
+            overQualified = 0;
+            isSmStraight = false;
+            fullHouse = -1;
+            threeOfKind = -1;
+            fourOfKind = -1;
+
+            milsec = 300;           //This will regulate one die result appearing at a time.
+            rollNumber = 0;         //Initialize roll count.
+            turnsTaken = 0;         //Monitors and limits game length.
+
+            document.getElementById("enterOnes").innerHTML=" ";                                 //Clear scores.
+            document.getElementById("enterTwos").innerHTML=" ";
+            document.getElementById("enterThrees").innerHTML=" ";
+            document.getElementById("enterFours").innerHTML=" ";
+            document.getElementById("enterFives").innerHTML=" ";
+            document.getElementById("enterSixes").innerHTML=" ";
+            document.getElementById("enterThreeOfKind").innerHTML=" ";
+            document.getElementById("enterFourOfKind").innerHTML=" ";
+            document.getElementById("enterFullHouse").innerHTML=" ";
+            document.getElementById("enterSmStraight").innerHTML=" ";
+            document.getElementById("enterLgStraight").innerHTML=" ";
+            document.getElementById("enterYahtzee").innerHTML=" ";
+            document.getElementById("enterChance").innerHTML=" ";
+            document.getElementById("subtotal").innerHTML=" ";
+            document.getElementById("bonus").innerHTML=" ";
+            document.getElementById("upperTotal").innerHTML=" ";
+            document.getElementById("lowerTotal").innerHTML=" ";
+            document.getElementById("grand").innerHTML=" ";
+            document.getElementById("Roll_Number").innerHTML="New game! Take your first roll!"; //New game greeting.
+            document.getElementById("status").style.backgroundColor="aqua";     //This and the next
+            document.getElementById("status").style.color="black";              //2 lines reset the
+            document.getElementById("status").innerHTML="In progress.";         //game status info.
+            document.getElementById("turnsTaken").innerHTML=turnsTaken;
+            document.getElementById("gmsPlayed").innerHTML="  " + gamesPlayed;                  //Update session stats.
+            document.getElementById("avg").innerHTML=" " + average; 
+            document.getElementById("high").innerHTML="  " + hiScore; 
+        }
+        //----------------------------------The Dice Rolling Functions------------------------------------------
+        function rollFirst() {  
+        firstDi = Math.floor(Math.random()*6) + 1;
+        document.getElementById("first").innerHTML="";
+        setTimeout("document.getElementById('first').innerHTML=firstDi;",milsec);
+        milsec+=300;            //Add to the interval for setTimeout and pause before next die value appears.
+        theDice[0]=firstDi;     //Place each die's new value into the corresponding dice array index position.
+        }   
+        
+        function rollSecond() {
+        secondDi = Math.floor(Math.random()*6) + 1; 
+        document.getElementById("second").innerHTML="";
+        setTimeout("document.getElementById('second').innerHTML=secondDi;",milsec);
+        milsec+=300;
+        theDice[1]=secondDi;
+        }
+        
+        function rollThird() {
+        thirdDi = Math.floor(Math.random()*6) + 1;
+        document.getElementById("third").innerHTML="";
+        setTimeout("document.getElementById('third').innerHTML=thirdDi;",milsec);
+        milsec+=300;
+        theDice[2]=thirdDi;
+        }
+
+        function rollFourth() {
+        fourthDi = Math.floor(Math.random()*6) + 1;
+        document.getElementById("fourth").innerHTML="";
+        setTimeout("document.getElementById('fourth').innerHTML=fourthDi;",milsec);
+        milsec+=300;
+        theDice[3]=fourthDi;
+        }
+
+        function rollFifth() {
+        fifthDi = Math.floor(Math.random()*6) + 1; 
+        document.getElementById("fifth").innerHTML=""; 
+        setTimeout("document.getElementById('fifth').innerHTML=fifthDi;",milsec);
+        milsec=300;
+        theDice[4]=fifthDi;
+        }
+
+        function rollDice() {  
+            if(turnsTaken>=13)      //The game is over. Disable further rolls.
+                return;
+            if(rollNumber == 3) {
+                alert("You have taken your 3rd roll for this turn. Please enter a score.")  //Limit each turn to 3 rolls.
+            }
+            else
+            {
+            if(reroll1stDi) { rollFirst(); }                            //If Keep button is pressed, reroll1stDi is false and die value won't be changed.
+        document.getElementById("first").style.backgroundColor="green";   //Restore the die to original color.
+        reroll1stDi=true;                                               //Reroll is re-enabled for this die.
+            if(reroll2ndDi) { rollSecond(); }
+        document.getElementById("second").style.backgroundColor="green";
+        reroll2ndDi=true;
+            if(reroll3rdDi) { rollThird(); }
+        document.getElementById("third").style.backgroundColor="green";
+        reroll3rdDi=true;
+            if(reroll4thDi) { rollFourth(); }
+        document.getElementById("fourth").style.backgroundColor="green";
+        reroll4thDi=true;
+            if(reroll5thDi) { rollFifth(); }
+        document.getElementById("fifth").style.backgroundColor="green";
+        reroll5thDi=true;
+
+        rollNumber++;       //Keep track of how many rolls have been taken.
+        milsec=300;         //At the end of each roll, reset first die time.
+        document.getElementById("Roll_Number").innerHTML="Result of Roll Number "+rollNumber;
+            }
+        }
+        //------------------------------------New Turn Function------------------------------------------------
+        function newTurn() {    //Enable all dice to be rolled.
+            turnsTaken++;       //Monitor game progress.
+            document.getElementById("turnsTaken").innerHTML=turnsTaken;
+            document.getElementById("grand").innerHTML=lowerHalfTotal+subtotal+bonus;   //Update Grand Total
+            document.getElementById("lowerTotal").innerHTML=lowerHalfTotal;             //and Lower Half Total
+            reroll1stDi=true;   //Disable any "Kept" dice.
+            reroll2ndDi=true;
+            reroll3rdDi=true;
+            reroll4thDi=true;
+            reroll5thDi=true;
+            document.getElementById("first").style.backgroundColor="yellow";   //Clear the board and get ready to roll!
+            document.getElementById("second").style.backgroundColor="yellow";
+            document.getElementById("third").style.backgroundColor="yellow";
+            document.getElementById("fourth").style.backgroundColor="yellow";
+            document.getElementById("fifth").style.backgroundColor="yellow";
+            document.getElementById("first").innerHTML="";
+            document.getElementById("second").innerHTML="";
+            document.getElementById("third").innerHTML="";
+            document.getElementById("fourth").innerHTML="";
+            document.getElementById("fifth").innerHTML="";
+            document.getElementById("Roll_Number").innerHTML="New turn! Take your first roll!";
+            rollNumber=0;       //Reinitialize to first roll of turn.
+            if(turnsTaken>=13) {
+                document.getElementById("status").style.backgroundColor="red";
+                document.getElementById("status").style.color="white";
+                document.getElementById("status").innerHTML="Done. Please start a new game.";
+            }
+        }
+            //----------------------------------------The Upper Half Score Entry Functions----------------------------------
+        function scoreOnes () {
+            if(ones>=0)         //This is where the negative values come in. They "allow" a score entry.
+            alert("Sorry, this slot is unavailable.");
+            else {
+            ones=0;                 //"Correct" the summation starting point.
+            for(i=0;i<=4;i++) {
+                if(theDice[i]==1)
+                ones++;
+            }
+            document.getElementById("enterOnes").innerHTML=ones;
+            subtotal+=ones;
+            if(subtotal>=63 && !bonusTaken) {
+                bonus=35;
+                bonusTaken=true;    //NOW we eliminate multiple bonuses!
+                }
+            document.getElementById("bonus").innerHTML=bonus;
+            document.getElementById("subtotal").innerHTML=subtotal;
+            document.getElementById("upperTotal").innerHTML=subtotal+bonus;
+            newTurn();
+                }
+        }
+        function scoreTwos () {
+            if(twos>=0)
+            alert("Sorry, this slot is unavailable.");
+            else {
+            twos=0;
+            for(i=0;i<=4;i++) {
+                if(theDice[i]==2)
+                twos+=2;
+            }
+            document.getElementById("enterTwos").innerHTML=twos;
+            subtotal+=twos;
+            if(subtotal>=63 && !bonusTaken) {
+                 bonus=35; 
+                 bonusTaken=true;
+                }
+            document.getElementById("bonus").innerHTML=bonus;
+            document.getElementById("subtotal").innerHTML=subtotal;
+            document.getElementById("upperTotal").innerHTML=subtotal+bonus;
+            newTurn();
+            }
+        }
+        function scoreThrees () {
+            if(threes>=0)
+            alert("Sorry, this slot is unavailable.");
+            else {
+            threes=0;
+            for(i=0;i<=4;i++) {
+                if(theDice[i]==3)
+                threes+=3;
+            }
+            document.getElementById("enterThrees").innerHTML=threes;
+            subtotal+=threes;
+            if(subtotal>=63 && !bonusTaken) {
+                bonus=35; 
+                bonusTaken=true;
+                }
+            document.getElementById("bonus").innerHTML=bonus;
+            document.getElementById("subtotal").innerHTML=subtotal;
+            document.getElementById("upperTotal").innerHTML=subtotal+bonus;
+            newTurn();
+            }
+        }
+        function scoreFours () {
+            if(fours>=0)
+            alert("Sorry, this slot is unavailable.");
+            else {
+            fours=0;
+            for(i=0;i<=4;i++) {
+                if(theDice[i]==4)
+                fours+=4;
+            }
+            document.getElementById("enterFours").innerHTML=fours;
+            subtotal+=fours;
+            if(subtotal>=63 && !bonusTaken) { 
+                bonus=35; 
+                bonusTaken=true;
+                }
+            document.getElementById("bonus").innerHTML=bonus;
+            document.getElementById("subtotal").innerHTML=subtotal;
+            document.getElementById("upperTotal").innerHTML=subtotal+bonus;
+            newTurn();
+            }
+        }
+        function scoreFives () {
+            if(fives>=0)
+            alert("Sorry, this slot is unavailable.");
+            else {
+            fives=0;
+            for(i=0;i<=4;i++) {
+                if(theDice[i]==5)
+                fives+=5;
+            }
+            document.getElementById("enterFives").innerHTML=fives;
+            subtotal+=fives;
+            if(subtotal>=63 && !bonusTaken) {
+                bonus=35; 
+                bonusTaken=true;
+                }
+            document.getElementById("bonus").innerHTML=bonus;
+            document.getElementById("subtotal").innerHTML=subtotal;
+            document.getElementById("upperTotal").innerHTML=subtotal+bonus;
+            newTurn();
+            }
+        }
+        function scoreSixes () {
+            if(sixes>=0)
+            alert("Sorry, this slot is unavailable.");
+            else {
+            sixes=0;
+            for(i=0;i<=4;i++) {
+                if(theDice[i]==6)
+                sixes+=6;
+            }
+            document.getElementById("enterSixes").innerHTML=sixes;
+            subtotal+=sixes;
+            if(subtotal>=63 && !bonusTaken) {
+             bonus=35; 
+             bonusTaken=true;
+            }
+            document.getElementById("bonus").innerHTML=bonus;
+            document.getElementById("subtotal").innerHTML=subtotal;
+            document.getElementById("upperTotal").innerHTML=subtotal+bonus;
+            newTurn();
+            }
+        }
+            //----------------------------------Full House Score Entry Function----------------------------------
+            function scoreFullHouse() {
+                if(fullHouse>=0) {
+                    alert("Sorry, this slot is not available.");
+                    return;
+                }
+                if(theDice[0]==theDice[1] && theDice[0]==theDice[2] && theDice[3]==theDice[4])  //There are 10 possible 
+                    fullHouse = 25;                                                             //combinations of 3 dice
+                if(theDice[0]==theDice[1] && theDice[0]==theDice[3] && theDice[2]==theDice[4])  //out of the 5 rolled.
+                    fullHouse = 25;
+                if(theDice[0]==theDice[1] && theDice[0]==theDice[4] && theDice[2]==theDice[3])  //Test each one along with
+                    fullHouse = 25;                                                             //its leftover pair.
+                if(theDice[0]==theDice[2] && theDice[0]==theDice[3] && theDice[1]==theDice[4])
+                    fullHouse = 25;
+                if(theDice[0]==theDice[2] && theDice[0]==theDice[4] && theDice[1]==theDice[3])
+                    fullHouse = 25;
+                if(theDice[0]==theDice[3] && theDice[0]==theDice[4] && theDice[1]==theDice[2])
+                    fullHouse = 25;
+                if(theDice[1]==theDice[2] && theDice[1]==theDice[3] && theDice[0]==theDice[4])
+                    fullHouse = 25;
+                if(theDice[1]==theDice[2] && theDice[1]==theDice[4] && theDice[0]==theDice[3])
+                    fullHouse = 25;
+                if(theDice[1]==theDice[3] && theDice[1]==theDice[4] && theDice[0]==theDice[2])
+                    fullHouse = 25;
+                if(theDice[2]==theDice[3] && theDice[2]==theDice[4] && theDice[0]==theDice[1])
+                    fullHouse = 25;
+                if(fullHouse != 25) {
+                    alert("Sorry, you don't have a Full House");
+                    return;
+                }
+                lowerHalfTotal+=fullHouse;
+                document.getElementById("enterFullHouse").innerHTML=fullHouse;
+                newTurn();
+            }
+
+            function zeroFullHouse() {
+                if(fullHouse>=0) {
+                    alert("Sorry, this slot is not available.");
+                    return;
+                }
+                fullHouse = 0;
+                document.getElementById("enterFullHouse").innerHTML=fullHouse;
+                newTurn();
+            }
+
+            //----------------------------------Three of a Kind Score Entry Functions----------------------------
+            function score3OfKind() {
+                if(threeOfKind>=0) {
+                    alert("Sorry, this slot is not available.");
+                    return;
+                }
+                var match0 = 0;             //Any die that matches 2 others means there is a 3 of a kind.
+                var match1 = 0;
+                var match2 = 0;
+                for(i=1;i<=4;i++) {             
+                    if(theDice[0]==theDice[i])  //Compares first die to all other dice.
+                    match0++;                   //2 or more matches means there IS a 3 of a kind.
+                }
+                for(j=2;j<=4;j++) {             
+                    if(theDice[1]==theDice[j])  //Compares second die to 3rd, 4th and 5th dice.
+                    match1++;                   //Again, 2 or more matches means YES.
+                }
+                for(k=3;k<=4;k++) {               
+                    if(theDice[2]==theDice[k])  //Compares third die to 4th and 5th dice.
+                    match2++;                   //You know...
+                }
+                if(match0 >= 2 || match1 >= 2 || match2 >= 2) {
+                    threeOfKind = 0;
+                    for(l=0;l<=4;l++) {
+                        threeOfKind+=theDice[l];
+                    }
+                    lowerHalfTotal+=threeOfKind;
+                    document.getElementById("enterThreeOfKind").innerHTML=threeOfKind;
+                    newTurn();
+                }
+                else
+                alert("Sorry, you don't have 3 of a kind.");
+            }
+
+            function zero3OfKind() {
+                if(threeOfKind>=0) {
+                    alert("Sorry, this slot is not available.");
+                    return;
+                }
+                threeOfKind = 0;
+                document.getElementById("enterThreeOfKind").innerHTML=threeOfKind;
+                newTurn();
+            }
+
+            //--------------------------------Four of a Kind Score Entry Functions-------------------------------
+            function score4OfKind() {
+                if(fourOfKind>=0) {
+                    alert("Sorry, this slot is not available.");
+                    return;
+                }
+                var Match0 = 0;
+                var Match1 = 0;
+                for(i=1;i<=4;i++) {
+                    if(theDice[0]==theDice[i])
+                    Match0++;                   //3 matches and we have a WINNER!
+                }
+                for(j=2;j<=4;j++) {
+                    if(theDice[1]==theDice[j])
+                    Match1++;
+                }
+                if(Match0 >= 3 || Match1 >= 3) {
+                    fourOfKind = 0;
+                    for(l=0;l<=4;l++) {
+                        fourOfKind+=theDice[l];
+                    }
+                    lowerHalfTotal+=fourOfKind;
+                    document.getElementById("enterFourOfKind").innerHTML=fourOfKind;
+                    newTurn();
+                }
+                else
+                alert("Sorry, you don't have 4 of a kind.");
+            }
+
+            function zero4OfKind() {
+                if(fourOfKind>=0) {
+                    alert("Sorry, this slot is not available.");
+                    return;
+                }
+                fourOfKind = 0;
+                document.getElementById("enterFourOfKind").innerHTML=fourOfKind;
+                newTurn();
+            }
+            //----------------------------------Small Straight Score Entry Functions-----------------------------
+            var isSmStraight = false;  //This is a new global variable that is used in Qualified() if called and toggled to true.
+            var overQualified = 0;     //2 subsets can possibly qualify (1 1 2 3 4), so guard against duplicate score awards.
+
+            function Qualified() {
+                isSmStraight = true;
+                overQualified++;
+                if(overQualified == 1) {    //This way lowerHalfTotal won't repeat a 30 point increase.
+                smStraight = 30;                                                
+                lowerHalfTotal += smStraight;                                   
+                document.getElementById("enterSmStraight").innerHTML=smStraight;
+                newTurn();
+                }
+            }
+
+            function scoreSmStr () {
+                if(smStraight>=0) {
+                    alert("Sorry, this slot is not available.")
+                    return;
+                }
+                var sum1 = theDice[0]+theDice[1]+theDice[2]+theDice[3];     //There are 3 ways to make a small straight:   
+                var sum2 = theDice[0]+theDice[1]+theDice[2]+theDice[4];     //1,2,3,4 | 2,3,4,5 | 3,4,5,6
+                var sum3 = theDice[0]+theDice[1]+theDice[3]+theDice[4];     //The sums are 10, 14, and 18.
+                var sum4 = theDice[0]+theDice[2]+theDice[3]+theDice[4];     //The products are 24, 120, and 360.
+                var sum5 = theDice[1]+theDice[2]+theDice[3]+theDice[4];     //Take the sum of each subset's elements
+                                            
+                var product1 = theDice[0]*theDice[1]*theDice[2]*theDice[3];     //Take the product of each subset's elements.   
+                var product2 = theDice[0]*theDice[1]*theDice[2]*theDice[4];     
+                var product3 = theDice[0]*theDice[1]*theDice[3]*theDice[4];     
+                var product4 = theDice[0]*theDice[2]*theDice[3]*theDice[4];  
+                var product5 = theDice[1]*theDice[2]*theDice[3]*theDice[4]; 
+
+                if((sum1==10 && product1==24) ||  (sum1==14 && product1==120) || (sum1==18 && product1==360))    //Look for qualifying               
+                    Qualified();                                                                                 //values for each sub-
+                if((sum2==10 && product2==24) ||  (sum2==14 && product2==120) || (sum2==18 && product2==360))    //set's sum and product.                 
+                    Qualified(); 
+                if((sum3==10 && product3==24) ||  (sum3==14 && product3==120) || (sum3==18 && product3==360))                  
+                    Qualified();
+                if((sum4==10 && product4==24) ||  (sum4==14 && product4==120) || (sum4==18 && product4==360))                  
+                    Qualified();
+                if((sum5==10 && product5==24) ||  (sum5==14 && product5==120) || (sum5==18 && product5==360))                  
+                    Qualified();                              
+                
+                if(!isSmStraight)       //Now check to see if none of the subsets passed the tests.
+                alert("Sorry, you don't have a Small Straight.");
+            }
+
+            function zeroSmStraight () {
+                if(smStraight>=0) {
+                    alert("Sorry, this slot is not available.")
+                    return;
+                }
+                smStraight = 0;
+                document.getElementById("enterSmStraight").innerHTML=smStraight;
+                newTurn();
+            }
+            //----------------------------------Large Straight Score Entry Functions-----------------------------
+            function scoreLgStr() {   
+                var sum = 0;
+                var product = 1;
+                if(lgStraight>=0) {
+                    alert("Sorry, this slot is not available.");
+                    return;
+                }                  
+                    for(i=0;i<=4;i++) {             // Add all the dice together.
+                        sum+=theDice[i];
+                    }
+                    for(j=0;j<=4;j++) {             // Multiply all the dice together.
+                        product*=theDice[j];
+                    }
+                    if((sum==15 && product==120) || (sum==20 && product==720)) {        // The only possibilities with
+                        lgStraight = 40;                                                // 1 2 3 4 5 amd 2 3 4 5 6.
+                        lowerHalfTotal += lgStraight;
+                        document.getElementById("enterLgStraight").innerHTML=lgStraight;
+                        newTurn();
+                    }
+                    else
+                    alert("Sorry, you don't have a Large Straight.");
+                }
+
+            function zeroLgStr() {
+                if(lgStraight>=0) 
+                    alert("Sorry, this slot is not available.");
+                else {
+                    lgStraight = 0;
+                    document.getElementById("enterLgStraight").innerHTML=lgStraight;
+                    newTurn();
+                }
+            }
+            //------------------------------------Yahtzee Score Entry Functions------------------------------------
+            var yahtzeesScored = 0;     //A global variable to count Yahtzees.
+
+            function scoreYahtzee(isYahtzee) {  //Parameter is set to true coming in. Validation time!
+                if(yahtzee==0) {
+                    alert("Sorry, this slot is not available.");
+                    return;
+                }      
+                for(i=1;i<=4;i++) {             //Check for any dice that are different.
+                    if(theDice[0]!=theDice[i])
+                    isYahtzee=false;            //Disqualifier.
+                }
+                if(!isYahtzee)  {
+                    alert("Sorry, you don't have a Yahtzee.");
+                    return;
+                }
+
+                yahtzeesScored++;
+
+                if(yahtzeesScored==1) {             //For the 1st Yahtzee of the game:
+                    yahtzee = 50;
+                    lowerHalfTotal += yahtzee;
+                    document.getElementById("enterYahtzee").innerHTML=yahtzee;
+                    newTurn();
+                }
+                else {
+                    var yhtzBonusTaken = false;     //This will monitor the lower half of the else.
+
+                    yahtzee+=100;                   //Each additional Yahtzee get 100 point bonus!
+                    lowerHalfTotal += 100;
+                    document.getElementById("enterYahtzee").innerHTML=yahtzee;
+
+                    if(turnsTaken>=12) {            //In the rare case of a bonus Yahtzee on the 
+                    newTurn();                      //very last turn, take the bonus and
+                    return;                         //skip out of the function!
+                    }
+
+                    if(theDice[0]==1 && ones<0) {    //The rules require that a bonus Yahtzee
+                    scoreOnes();                     //automatically scores its corresponding
+                    yhtzBonusTaken = true;           //Upper Section slot if available.
+                    }                    
+                    if(theDice[0]==2 && twos<0) {  
+                    scoreTwos();                    //This says an Upper Half score has been entered and
+                    yhtzBonusTaken = true;          //will prevent an alert from prompting another entry.
+                    }                               
+                    if(theDice[0]==3 && threes<0) {
+                    scoreThrees();
+                    yhtzBonusTaken = true;
+                    }
+                    if(theDice[0]==4 && fours<0) {
+                    scoreFours();
+                    yhtzBonusTaken = true;
+                    }
+                    if(theDice[0]==5 && fives<0) {
+                    scoreFives();
+                    yhtzBonusTaken = true;
+                    }
+                    if(theDice[0]==6 && sixes<0) {
+                    scoreSixes();
+                    yhtzBonusTaken = true;
+                    }
+
+                    if(!yhtzBonusTaken && theDice[0]==1 && ones>=0)         //If the Upper Section slot is
+                    alert("Click 'Take Score' for any available slot.");    //not available, an available slot
+                    if(!yhtzBonusTaken && theDice[0]==2 && twos>=0)         //in either section must be scored.
+                    alert("Click 'Take Score' for any available slot.");
+                    if(!yhtzBonusTaken && theDice[0]==3 && threes>=0)       
+                    alert("Click 'Take Score' for any available slot.");
+                    if(!yhtzBonusTaken && theDice[0]==4 && fours>=0)
+                    alert("Click 'Take Score' for any available slot.");
+                    if(!yhtzBonusTaken && theDice[0]==5 && fives>=0)
+                    alert("Click 'Take Score' for any available slot.");
+                    if(!yhtzBonusTaken && theDice[0]==6 && sixes>=0)
+                    alert("Click 'Take Score' for any available slot.");
+                }  
+            }
+            
+            function zeroYahtzee() {
+                if(yahtzee>=0) 
+                    alert("Sorry, this option is not available.");
+                else {
+                    yahtzee = 0;
+                    document.getElementById("enterYahtzee").innerHTML=yahtzee;
+                    newTurn();
+                }
+            }
+            //-----------------------------------Chance Score Entry Functions---------------------------------------------
+            function scoreChance() {
+                if(chance>=0)
+                    alert("Sorry, this slot is not available");
+                else {
+                    chance++;           //Get rid of the -1 initial value and start at 0.
+                    for(i=0;i<=4;i++) 
+                       { chance += theDice[i]; }
+                    lowerHalfTotal += chance;
+                    document.getElementById("enterChance").innerHTML=chance;
+                    newTurn();
+                }
+            }
+
+            function zeroChance() {
+                if(chance>=0) 
+                    alert("Sorry, this slot is not available.");
+                else {
+                    chance = 0;
+                    document.getElementById("enterChance").innerHTML=chance;
+                    newTurn();
+                }
+            }   
+        </script>
+
+        <style type="text/css">
+        .message {
+            /*width: 545px;*/
+            border: 2px solid black;
+            background-color: black;
+            color: orangered;
+            text-align: center;
+        }
+        .dice {
+            width: 100px;
+            height: 100px;
+            background-color: yellow;
+            text-align: center;
+            color: white;
+            font-size: 80px;
+            font-weight: bold;
+        }
+        button {
+            width: 100px;
+            background-color: gray;
+            font-weight: bold;
+        }
+        table {
+            background-color: aqua;
+            border: 2px solid black;
+            float: left;
+            margin-right: 5%;    
+            border-collapse: collapse;
+        }
+        td {
+            border: 2px solid black;
+            text-align: center;
+            font-weight: bold;
+            }
+        th {
+            text-align: left;
+            
+        }
+        #Scoresheet {
+            float: left;
+            background-color: burlywood;
+            font-weight: bold;
+        }
+        .score {
+            width: 10%;
+            background-color: white;
+        }
+        </style>
+    </head>
+    <body>
+        <h1>Yahtzee!</h1>
+        <p>&copy; 2019 by Kenneth White</p>
+        <table>
+            <tr>
+                <td id="Roll_Number" colspan="2">Take your first roll!</td>
+                <td><button onclick="rollDice();">Roll Dice</button></td>
+                <td style = "font-weight: bold; color: white; background-color: red;">Red: keep</td>
+                <td style = "font-weight: bold; color: white; background-color: green;">Green: reroll</td>
+            </tr>
+            <tr>
+                <td class="dice" id="first"></td>
+                <td class="dice" id="second"></td>
+                <td class="dice" id="third"></td>
+                <td class="dice" id="fourth"></td>
+                <td class="dice" id="fifth"></td>
+            </tr>
+            <tr>
+                <td><button onclick = "reroll1stDi=false;document.getElementById('first').style.backgroundColor='red';">Keep</button></td>
+                <td><button onclick = "reroll2ndDi=false;document.getElementById('second').style.backgroundColor='red';">Keep</button></td>
+                <td><button onclick = "reroll3rdDi=false;document.getElementById('third').style.backgroundColor='red';">Keep</button></td>
+                <td><button onclick = "reroll4thDi=false;document.getElementById('fourth').style.backgroundColor='red';">Keep</button></td>
+                <td><button onclick = "reroll5thDi=false;document.getElementById('fifth').style.backgroundColor='red';">Keep</button></td>
+            </tr>
+            <tr>
+                <td><button onclick="reroll1stDi=true;document.getElementById('first').style.backgroundColor='green';">Reroll</button></td>     
+                <td><button onclick="reroll2ndDi=true;document.getElementById('second').style.backgroundColor='green';">Reroll</button></td>
+                <td><button onclick="reroll3rdDi=true;document.getElementById('third').style.backgroundColor='green';">Reroll</button></td>
+                <td><button onclick="reroll4thDi=true;document.getElementById('fourth').style.backgroundColor='green';">Reroll</button></td>
+                <td><button onclick="reroll5thDi=true;document.getElementById('fifth').style.backgroundColor='green';">Reroll</button></td>
+            </tr>
+            <tr>
+                <td colspan="5" class="message">
+                    <h2>After the 1st roll of each new turn, click</h2> <h2><span style="color: white;"> 
+                        Keep </span> or <span style="color: white;">
+                        Reroll </span>for each die on each new roll.</h2>
+                    <h2>Unclicked dice will automatically be rerolled!</h2>
+                </td>
+            </tr>
+            <tr>
+                <td colspan ="3" style="color: black; font-weight: bold;">Game status:</td>
+                <td id="status" colspan="2" style="color: black; font-weight: bold;">In progress</td>
+            </tr>
+            <tr>
+                <td colspan ="3" style="color: black; font-weight: bold;">Turns taken:</td>
+                <td id="turnsTaken" colspan="2" style="color: black; font-weight: bold;">0</td>
+            </tr>
+            <tr>
+                <td colspan="5" class="message">
+                    <h2>Games played this session: <span id="gmsPlayed" style="color: white;"> 0</span></h2>
+                    <h2>Average score for session: <span id="avg" style="color: white;"> 0</span></h2>
+                    <h2>Highest score for session: <span id="high" style="color: white;"> 0</span></h2>
+                </td>  
+            </tr>
+            <tr>
+                <td colspan="4"><span style="background-color: red; color: white; font-weight: bold">NOTE: </span> 
+                    After each game, click to update current session --></td>
+                <td><button onclick = "newGame();">New Game</button></td>
+            </tr>      
+        </table>
+        <table id = "Scoresheet">
+            <tr>
+                <th colspan="5">Upper Section</th>
+            </tr>
+            <tr>
+                <td style="background-color: aqua;">Ones</td>
+                <td style="background-color: aqua;">Total of all ones</td>
+                <td><button onclick = "scoreOnes();">Take Score</button></td>
+                <td><button onclick = "scoreOnes();">Zero Out</button></td>
+                <td id = "enterOnes" class = "score"></td>
+            </tr>
+            <tr>
+                <td style="background-color: aqua;">Twos</td>
+                <td style="background-color: aqua;">Total of all twos</td>
+                <td><button onclick = "scoreTwos();">Take Score</button></td>
+                <td><button onclick = "scoreTwos();">Zero Out</button></td>
+                <td id = "enterTwos" class = "score"></td>
+            </tr>
+            <tr>
+                <td style="background-color: aqua;">Threes</td>
+                <td style="background-color: aqua;">Total of all threes</td>
+                <td><button onclick = "scoreThrees();">Take Score</button></td>
+                <td><button onclick = "scoreThrees();">Zero Out</button></td>
+                <td id = "enterThrees" class = "score"></td>
+            </tr>
+            <tr>
+                <td style="background-color: aqua;">Fours</td>
+                <td style="background-color: aqua;">Total of all fours</td>
+                <td><button onclick = "scoreFours();">Take Score</button></td>
+                <td><button onclick = "scoreFours();">Zero Out</button></td>
+                <td id = "enterFours" class = "score"></td>
+            </tr>
+            <tr>
+                <td style="background-color: aqua;">Fives</td>
+                <td style="background-color: aqua;">Total of all fives</td>
+                <td><button onclick = "scoreFives();">Take Score</button></td>
+                <td><button onclick = "scoreFives();">Zero Out</button></td>
+                <td id = "enterFives" class = "score"></td>
+            </tr>
+            <tr>
+                <td style="background-color: aqua;">Sixes</td>
+                <td style="background-color: aqua;">Total of all sixes</td>
+                <td><button onclick = "scoreSixes();">Take Score</button></td>
+                <td><button onclick = "scoreSixes();">Zero Out</button></td>
+                <td id = "enterSixes" class = "score"></td>
+            </tr>
+            <tr>
+                <td style="background-color: aqua; text-align: right;" colspan="4">Subtotal:</td>
+                <td id="subtotal" class = "score"></td>
+            </tr>
+            <tr>
+                <td style="background-color: aqua;" colspan="4">Bonus: 35 points if Subtotal is at least 63</td>
+                <td id = "bonus" class = "score"></td>
+            </tr>
+            <tr>
+                <td style="background-color: aqua; text-align: right;" colspan="4">Upper Section total:</td>
+                <td id = "upperTotal" class = "score"></td>
+            </tr>
+            <tr>
+                <th colspan="5">Lower Section</th>
+            </tr>
+            <tr>
+                <th colspan="5" style="text-align: center; border-top: 2px solid black;">
+                    Yahtzees rolled after the 1st earn a 100 point bonus! (Click Take Score for Yahtzee)</th>
+            </tr>
+            <tr>
+                <td style="background-color: aqua;">Three of a kind</td>
+                <td style="background-color: aqua;">Total of all 5 dice</td>
+                <td><button onclick = "score3OfKind();">Take Score</button></td>
+                <td><button onclick = "zero3OfKind();">Zero Out</button></td>
+                <td id = "enterThreeOfKind" class = "score"></td>
+            </tr>
+            <tr>
+                <td style="background-color: aqua;">Four of a kind</td>
+                <td style="background-color: aqua;">Total of all 5 dice</td>
+                <td><button onclick = "score4OfKind();">Take Score</button></td>
+                <td><button onclick = "zero4OfKind();">Zero Out</button></td>
+                <td id = "enterFourOfKind" class = "score"></td>
+            </tr>
+            <tr>
+                <td style="background-color: aqua;">Full House: 3 of a kind + pair</td>
+                <td style="background-color: aqua;">25 points</td>
+                <td><button onclick = "scoreFullHouse();">Take Score</button></td>
+                <td><button onclick = "zeroFullHouse();">Zero Out</button></td>
+                <td id = "enterFullHouse" class = "score"></td>
+            </tr>
+            <tr>
+                <td style="background-color: aqua;">Small Straight: 4 dice in sequence</td>
+                <td style="background-color: aqua;">30 points</td>
+                <td><button onclick = "scoreSmStr();">Take Score</button></td>
+                <td><button onclick = "zeroSmStraight();">Zero Out</button></td>
+                <td id = "enterSmStraight" class = "score"></td>
+            </tr>
+            <tr>
+                <td style="background-color: aqua;">Large Straight: 5 dice in sequence</td>
+                <td style="background-color: aqua;">40 points</td>
+                <td><button onclick = "scoreLgStr();">Take Score</button></td>
+                <td><button onclick = "zeroLgStr();">Zero Out</button></td>
+                <td id = "enterLgStraight" class = "score"></td>
+            </tr>
+            <tr>
+                <td style="background-color: aqua;">YAHTZEE!: 5 of a kind</td>
+                <td style="background-color: aqua;">50 points</td>
+                <td><button onclick = "scoreYahtzee(true);">Take Score</button></td>
+                <td><button onclick = "zeroYahtzee();">Zero Out</button></td>
+                <td id = "enterYahtzee" class = "score"></td>
+            </tr>
+            <tr>
+                <td style="background-color: aqua;">Chance</td>
+                <td style="background-color: aqua;">Total of all 5 dice</td>
+                <td><button onclick = "scoreChance();">Take Score</button></td>
+                <td><button onclick = "zeroChance();">Zero Out</button></td>
+                <td  id ="enterChance" class = "score"></td>
+            </tr>
+            <tr> 
+                <td style="text-align: right; background-color: aqua;" colspan = "4">Lower Section total:</td>               
+                <td id = "lowerTotal" class = "score"></td>
+            </tr>
+            <tr>
+                <td style = "text-align: right; background-color: aqua;" colspan="4">GRAND TOTAL:</td>
+                <td id = "grand" class = "score"></td>
+            </tr>
+        </table>
+    </body>
+</html>

@@ -1,0 +1,564 @@
+<html>
+    <head>
+            <title>Tic Tac Toe</title>
+        <script type="text/javascript">
+            var board = new Array(9);    //Simulate the board
+  
+            for(i=0;i<9;i++)      //Assign different values to each position
+            {
+                board[i]=i;
+            }
+            var occupiedSquares = 0;    //A placeholder for checking for Cat's Game
+            var Xwins = 0;
+            var Owins = 0;
+            var Cat = 0;
+            var isOsTurn = true;    //Both true allows X or O to start first game.
+            var isXsTurn = true;    //Toggling these as turns are taken prevents 2 consecutive X's or O's
+            var gameOver = false;   //This will prevent playing on if true after a game has been won, forcing a new game.
+
+            function printX0() {        //Redo print X or O and check for win!
+                if(gameOver)  {         //The game has ended. Prevent continuation and prompt for start of a new game.
+                    alert("This game is over. Please click New Game.");
+                    return;
+                    }
+                if(!isXsTurn) {
+                    alert("It's O's turn.");
+                    return;
+                    }
+                document.getElementById("position0").innerHTML = "X";
+                checkForWin(0,9);
+                isXsTurn=false;
+                isOsTurn=true;           
+            }
+            function printO0() {
+                if(gameOver)  {
+                    alert("This game is over. Please click New Game.");
+                    return;
+                    }
+                if(!isOsTurn) {
+                    alert("It's X's turn.");
+                    return;
+                    }
+                document.getElementById("position0").innerHTML = "O";
+                checkForWin(0,10);
+                isXsTurn=true;
+                isOsTurn=false; 
+                }
+            function printX1() {
+                if(gameOver)  {
+                    alert("This game is over. Please click New Game.");
+                    return;
+                    }
+                if(!isXsTurn) {
+                    alert("It's O's turn.");
+                    return;
+                    }
+                document.getElementById("position1").innerHTML = "X";
+                checkForWin(1,9); 
+                isXsTurn=false;
+                isOsTurn=true; 
+            }
+            function printO1() {
+                if(gameOver)  {
+                    alert("This game is over. Please click New Game.");
+                    return;
+                    }
+                if(!isOsTurn) {
+                    alert("It's X's turn.");
+                    return;
+                    }
+                document.getElementById("position1").innerHTML = "O";
+                checkForWin(1,10);
+                isXsTurn=true;
+                isOsTurn=false;    
+            }
+            function printX2() {
+                if(gameOver)  {
+                    alert("This game is over. Please click New Game.");
+                    return;
+                    }
+                if(!isXsTurn) {
+                    alert("It's O's turn.");
+                    return;
+                    }
+                document.getElementById("position2").innerHTML = "X";
+                checkForWin(2,9);
+                isXsTurn=false;
+                isOsTurn=true; 
+            }
+            function printO2() {
+                if(gameOver)  {
+                    alert("This game is over. Please click New Game.");
+                    return;
+                    }
+                if(!isOsTurn) {
+                    alert("It's X's turn.");
+                    return;
+                    }
+                document.getElementById("position2").innerHTML = "O";
+                checkForWin(2,10)
+                isXsTurn=true;
+                isOsTurn=false; 
+            }
+            function printX3() {
+                if(gameOver)  {
+                    alert("This game is over. Please click New Game.");
+                    return;
+                    }
+                if(!isXsTurn) {
+                    alert("It's O's turn.");
+                    return;
+                    }
+                document.getElementById("position3").innerHTML = "X";
+                checkForWin(3,9);
+                isXsTurn=false;
+                isOsTurn=true; 
+            }
+            function printO3() {
+                if(gameOver)  {
+                    alert("This game is over. Please click New Game.");
+                    return;
+                    }
+                if(!isOsTurn) {
+                    alert("It's X's turn.");
+                    return;
+                    }
+                document.getElementById("position3").innerHTML = "O";
+                checkForWin(3,10);
+                isXsTurn=true;
+                isOsTurn=false; 
+            }
+            function printX4() {
+                if(gameOver)  {
+                    alert("This game is over. Please click New Game.");
+                    return;
+                    }
+                if(!isXsTurn) {
+                    alert("It's O's turn.");
+                    return;
+                    }
+                document.getElementById("position4").innerHTML = "X";
+                checkForWin(4,9);
+                isXsTurn=false;
+                isOsTurn=true; 
+            }
+            function printO4() {
+                if(gameOver)  {
+                    alert("This game is over. Please click New Game.");
+                    return;
+                    }
+                if(!isOsTurn) {
+                    alert("It's X's turn.");
+                    return;
+                    }
+                document.getElementById("position4").innerHTML = "O";
+                checkForWin(4,10);
+                isXsTurn=true;
+                isOsTurn=false; 
+            }
+            function printX5() {
+                if(gameOver)  {
+                    alert("This game is over. Please click New Game.");
+                    return;
+                    }
+                if(!isXsTurn) {
+                    alert("It's O's turn.");
+                    return;
+                    }
+                document.getElementById("position5").innerHTML = "X";
+                checkForWin(5,9);
+                isXsTurn=false;
+                isOsTurn=true; 
+            }
+            function printO5() {
+                if(gameOver)  {
+                    alert("This game is over. Please click New Game.");
+                    return;
+                    }
+                if(!isOsTurn) {
+                    alert("It's X's turn.");
+                    return;
+                    }
+                document.getElementById("position5").innerHTML = "O";
+                checkForWin(5,10);
+                isXsTurn=true;
+                isOsTurn=false; 
+            }
+            function printX6() {
+                if(gameOver)  {
+                    alert("This game is over. Please click New Game.");
+                    return;
+                    }
+                if(!isXsTurn) {
+                    alert("It's O's turn.");
+                    return;
+                    }
+                document.getElementById("position6").innerHTML = "X";
+                checkForWin(6,9);
+                isXsTurn=false;
+                isOsTurn=true; 
+            }
+            function printO6() {
+                if(gameOver)  {
+                    alert("This game is over. Please click New Game.");
+                    return;
+                    }
+                if(!isOsTurn) {
+                    alert("It's X's turn.");
+                    return;
+                    }
+                document.getElementById("position6").innerHTML = "O";
+                checkForWin(6,10);
+                isXsTurn=true;
+                isOsTurn=false;     
+            }
+            function printX7() {
+                if(gameOver)  {
+                    alert("This game is over. Please click New Game.");
+                    return;
+                    }
+                if(!isXsTurn) {
+                    alert("It's O's turn.");
+                    return;
+                    }
+                document.getElementById("position7").innerHTML = "X";
+                checkForWin(7,9);
+                isXsTurn=false;
+                isOsTurn=true; 
+            }
+            function printO7() {
+                if(gameOver)  {
+                    alert("This game is over. Please click New Game.");
+                    return;
+                    }
+                if(!isOsTurn) {
+                    alert("It's X's turn.");
+                    return;
+                    }
+                document.getElementById("position7").innerHTML = "O";
+                checkForWin(7,10);
+                isXsTurn=true;
+                isOsTurn=false; 
+            }
+            function printX8() {
+                if(gameOver)  {
+                    alert("This game is over. Please click New Game.");
+                    return;
+                    }
+                if(!isXsTurn) {
+                    alert("It's O's turn.");
+                    return;
+                    }
+                document.getElementById("position8").innerHTML = "X";
+                checkForWin(8,9);
+                isXsTurn=false;
+                isOsTurn=true; 
+            }
+            function printO8() {
+                if(gameOver)  {
+                    alert("This game is over. Please click New Game.");
+                    return;
+                    }
+                if(!isOsTurn) {
+                    alert("It's X's turn.");
+                    return;
+                    }
+                document.getElementById("position8").innerHTML = "O";
+                checkForWin(8,10);
+                isXsTurn=true;
+                isOsTurn=false; 
+            }
+
+            function ClearBoard() {         //Reset the board physically.
+                 document.getElementById("position0").style.backgroundColor = "black";
+                 document.getElementById("position0").innerHTML = "<button type = 'button' name = 'pos0X' onclick = printX0();>X</button>"
+                 + "   " + "<button type = 'button' name = 'pos0O' onclick = printO0();>O</button>";
+
+                 document.getElementById("position1").style.backgroundColor = "black";
+                 document.getElementById("position1").innerHTML = "<button type = 'button' name = 'pos1X' onclick = printX1();>X</button>"
+                 + "   " + "<button type = 'button' name = 'pos1O' onclick = printO1();>O</button>";
+
+                 document.getElementById("position2").style.backgroundColor = "black";
+                 document.getElementById("position2").innerHTML = "<button type = 'button' name = 'pos2X' onclick = printX2();>X</button>"
+                 + "   " + "<button type = 'button' name = 'pos2O' onclick = printO2();>O</button>";
+                 
+                 document.getElementById("position3").style.backgroundColor = "black";
+                 document.getElementById("position3").innerHTML = "<button type = 'button' name = 'pos3X' onclick = printX3();>X</button>"
+                 + "   " + "<button type = 'button' name = 'pos3O' onclick = printO3();>O</button>";
+
+                 document.getElementById("position4").style.backgroundColor = "black";
+                 document.getElementById("position4").innerHTML = "<button type = 'button' name = 'pos4X' onclick = printX4();>X</button>"
+                 + "   " + "<button type = 'button' name = 'pos4O' onclick = printO4();>O</button>";
+
+                 document.getElementById("position5").style.backgroundColor = "black";
+                 document.getElementById("position5").innerHTML = "<button type = 'button' name = 'pos5X' onclick = printX5();>X</button>"
+                 + "   " + "<button type = 'button' name = 'pos5O' onclick = printO5();>O</button>";
+
+                 document.getElementById("position6").style.backgroundColor = "black";
+                 document.getElementById("position6").innerHTML = "<button type = 'button' name = 'pos6X' onclick = printX6();>X</button>"
+                 + "   " + "<button type = 'button' name = 'pos6O' onclick = printO6();>O</button>";
+
+                 document.getElementById("position7").style.backgroundColor = "black";
+                 document.getElementById("position7").innerHTML = "<button type = 'button' name = 'pos7X' onclick = printX7();>X</button>"
+                 + "   " + "<button type = 'button' name = 'pos7O' onclick = printO7();>O</button>";
+
+                 document.getElementById("position8").style.backgroundColor = "black";
+                 document.getElementById("position8").innerHTML = "<button type = 'button' name = 'pos8X' onclick = printX8();>X</button>"
+                 + "   " + "<button type = 'button' name = 'pos8O' onclick = printO8();>O</button>";
+            }
+
+            function Reset() {            
+                 document.getElementById("Scoreboard").innerHTML = 'Wins for X: ' + Xwins + "<br/>"  //Update the Scoreboard
+                + 'Wins for O: ' + Owins + "<br/>" + 'Cats Game:  ' + Cat;
+                for(j=0;j<9;j++)      //Reset the board virtually.
+                {
+                board[j]=j;
+                }
+                occupiedSquares=0;   //Reset to 0 occupied squares.  
+                gameOver=true;      //Confirm that the game has ended and no more squares can be selected until start of new game.       
+            }
+
+            function checkForWin(pos,value) {
+                board[pos]=value;       //The position is given a value of 9 for X, 10 for O.
+                occupiedSquares++;      //When a square is chosen, it is counted.
+                
+                    if (board[0]==board[1] && board[0]==board[2]) {
+                        document.getElementById("position0").style.backgroundColor="green";
+                        document.getElementById("position1").style.backgroundColor="green";
+                        document.getElementById("position2").style.backgroundColor="green";
+                        if (document.getElementById("position0").innerHTML=="X") 
+                        Xwins++;
+                        else                         
+                        Owins++;
+                        Reset();  //Update Scoreboard immediately and end the game upon a decision.
+                    } else 
+                    if (board[3]==board[4] && board[3]==board[5]) {
+                        document.getElementById("position3").style.backgroundColor="green";
+                        document.getElementById("position4").style.backgroundColor="green";
+                        document.getElementById("position5").style.backgroundColor="green";
+                        if (document.getElementById("position3").innerHTML=="X")
+                        Xwins++;
+                        else
+                        Owins++;
+                        Reset();
+                    } else
+                    if (board[6]==board[7] && board[6]==board[8]) {
+                        document.getElementById("position6").style.backgroundColor="green";
+                        document.getElementById("position7").style.backgroundColor="green";
+                        document.getElementById("position8").style.backgroundColor="green";
+                        if (document.getElementById("position6").innerHTML=="X")
+                        Xwins++;
+                        else
+                        Owins++;
+                        Reset();
+                    } else
+                    if (board[0]==board[3] && board[0]==board[6]) {
+                        document.getElementById("position0").style.backgroundColor="green";
+                        document.getElementById("position3").style.backgroundColor="green";
+                        document.getElementById("position6").style.backgroundColor="green";
+                        if (document.getElementById("position0").innerHTML=="X")
+                        Xwins++;
+                        else
+                        Owins++;
+                        Reset();
+                    } else
+                    if (board[1]==board[4] && board[1]==board[7]) {
+                        document.getElementById("position1").style.backgroundColor="green";
+                        document.getElementById("position4").style.backgroundColor="green";
+                        document.getElementById("position7").style.backgroundColor="green";
+                        if (document.getElementById("position1").innerHTML=="X")
+                        Xwins++;
+                        else
+                        Owins++;
+                        Reset();
+                    } else
+                    if (board[2]==board[5] && board[2]==board[8]) {
+                        document.getElementById("position2").style.backgroundColor="green";
+                        document.getElementById("position5").style.backgroundColor="green";
+                        document.getElementById("position8").style.backgroundColor="green";
+                        if (document.getElementById("position2").innerHTML=="X")
+                        Xwins++;
+                        else
+                        Owins++;
+                        Reset();
+                    } else
+                    if (board[0]==board[4] && board[0]==board[8]) {
+                        document.getElementById("position0").style.backgroundColor="green";
+                        document.getElementById("position4").style.backgroundColor="green";
+                        document.getElementById("position8").style.backgroundColor="green";
+                        if (document.getElementById("position0").innerHTML=="X")
+                        Xwins++;
+                        else
+                        Owins++;
+                        Reset();
+                    } else
+                    if (board[2]==board[4] && board[2]==board[6]) {
+                        document.getElementById("position2").style.backgroundColor="green";
+                        document.getElementById("position4").style.backgroundColor="green";
+                        document.getElementById("position6").style.backgroundColor="green";
+                        if (document.getElementById("position2").innerHTML=="X")
+                        Xwins++;
+                        else
+                        Owins++;
+                        Reset();
+                    } else
+                    if (occupiedSquares == 9) { //Are all squares occupied with no winner?
+                        document.getElementById("position0").style.backgroundColor="gray";
+                        document.getElementById("position1").style.backgroundColor="gray";
+                        document.getElementById("position2").style.backgroundColor="gray";
+                        document.getElementById("position3").style.backgroundColor="gray";
+                        document.getElementById("position4").style.backgroundColor="gray";
+                        document.getElementById("position5").style.backgroundColor="gray";
+                        document.getElementById("position6").style.backgroundColor="gray";
+                        document.getElementById("position7").style.backgroundColor="gray";
+                        document.getElementById("position8").style.backgroundColor="gray"; 
+                        Cat++;
+                        Reset();
+                    }
+            }
+        </script>
+          
+        <style type="text/css">
+       button {
+           background-color: gray;
+           font-weight: bold;
+       }    
+       #position0 {
+            left: 200px;
+            top: 100px;
+            background-color: black;
+        }
+        #position1 {
+            left: 400px;
+            top: 100px;
+            background-color: black;
+        }
+        #position2 {
+            left: 600px;
+            top: 100px;
+            background-color: black;
+        }
+        #position3 {
+            left: 200px;
+            top: 300px;
+            background-color: black;
+        }
+        #position4 {
+            left: 400px;
+            top: 300px;
+            background-color: black;
+        }
+        #position5 {
+            left: 600px;
+            top: 300px;
+            background-color: black;
+        }
+        #position6 {
+            left: 200px;
+            top: 500px;
+            background-color: black;
+        }
+        #position7 {
+            left: 400px;
+            top: 500px;
+            background-color: black;
+        }
+        #position8 {
+            left: 600px;
+            top: 500px;
+            background-color: black;
+        }
+        #Scoreboard {
+            position: absolute;
+            border: 2px solid orangered;
+            top: 60px;
+            left: 900px;
+            font-size: 40px;
+            width: 300px;
+            height: 200px;
+            text-align: center;
+            padding-top: 30px;
+            background-color: black;
+            color: orangered;
+        }
+        div {
+            position: absolute;          
+            width: 199px;
+            height: 199px;  
+            color: orangered;
+            text-align: center;
+            font-size: 180px;
+            border: 2px solid orangered;
+            overflow: hidden;
+        }
+        </style>
+    </head>
+    <body>
+        <h1>Tic-Tac-Toe!</h1>
+        <p>&copy; 2019 by Kenneth White</p>
+        <button type="button" name="NewGame"
+        onclick="ClearBoard();isXsTurn=true;isOsTurn=true;gameOver=false;">New Game</button> 
+                            
+        <p id=Scoreboard>
+            Wins for X: 0
+            <br/>
+            Wins for O: 0
+            <br/>
+            Cats Game: 0
+        </p>
+        <div id=position0>
+            <button type="button" name="pos0X"
+            onclick="printX0();">X</button>
+            <button type="button" name="pos0O"
+            onclick="printO0();">O</button>           
+        </div>
+        <div id=position1>
+            <button type="button" name="pos1X"
+            onclick="printX1();">X</button>
+            <button type="button" name="pos1O"
+            onclick="printO1();">O</button>        
+        </div>
+        <div id=position2>
+            <button type="button" name="pos2X"
+            onclick="printX2();">X</button>
+            <button type="button" name="pos2O"
+            onclick="printO2();">O</button>          
+        </div>
+        <div id=position3>
+            <button type="button" name="pos3X"
+            onclick="printX3();">X</button>
+            <button type="button" name="pos3O"
+            onclick="printO3();">O</button>
+        </div>
+        <div id=position4>
+            <button type="button" name="pos4X"
+            onclick="printX4();">X</button>
+            <button type="button" name="pos4O"
+            onclick="printO4();">O</button>
+        </div>
+        <div id=position5>
+            <button type="button" name="pos5X"
+            onclick="printX5();">X</button>
+            <button type="button" name="pos5O"
+            onclick="printO5();">O</button>
+        </div>
+        <div id=position6>
+            <button type="button" name="pos6X"
+            onclick="printX6();">X</button>
+            <button type="button" name="pos6O"
+            onclick="printO6();">O</button>
+        </div>
+        <div id=position7>
+            <button type="button" name="pos7X"
+            onclick="printX7();">X</button>
+            <button type="button" name="pos7O"
+            onclick="printO7();">O</button>
+        </div>
+        <div id=position8>     
+            <button type="button" name="pos8X"
+            onclick="printX8();">X</button>        
+            <button type="button" name="pos8O"
+            onclick="printO8();">O</button>
+        </div>
+    </body>
+</html>
